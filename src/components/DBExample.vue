@@ -6,9 +6,19 @@ const data = reactive({
   input: "",
   messages: []
 })
+// DBコネクションを確立
+const db = getDatabase();
+onValue(ref(db, 'message'), (snapshot) => {
+  data.messages = [];
+  for (const i in snapshot.val()) {
+    data.messages.push(snapshot.val()[i])
+  }
+});
 
 const sendMessage = () => {
-  if (data.input === "") return;
+  if (data.input === "") return; // 入力欄が初期状態(空文字)の場合は何もしない
+  // push(ref(db, "test"), data.input) DBにデータを保存
+  push(ref(db, "message"), data.input)
   data.messages.push(data.input);
   data.input = "";
 }
